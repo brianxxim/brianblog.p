@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>博客列表</title>
+{% endblock %}
+
+
+{% block content %}
+    {% if articles %}
+    <section class="mysection">
+        <h4 class="index-title">
+            <a href="{% url "blog:articles" %}" ><i class="el-th-list"></i>博客</a>
+            {% if category %}
+            &nbsp;> &nbsp;
+            <a href="{% url "blog:articles" %}?category_id={{ category.category_id }} " style="color: #000;">{{ category.name }}</a>
+            {% elif tag %}
+            <a href="{% url "blog:articles" %}?tag_id={{ tag.tag_id }} " style="color: #000;">{{ tag.name }}</a>
+            {% endif %}
+            <span style="float:right;margin-right:10px;">共有文章:<a class="orange-text"> {{ total_count }} </a>篇</span>
+        </h4>
+        <div class="arclist">
+            <!--列表开始-->
+            <ul>
+                {% for article in articles %}
+                    {# 评论大于500显示推荐图标,大于100热门图标 #}
+                    <li {% if article.read_count > 500 %}id="tuijian"{% elif article.read_count > 100 %}
+                        id="Hot" {% endif %}>
+                        <div class="arcimg">
+                            <img src="{{ article.cover }}"
+                                 alt="{{ article.title }}" title="{{ article.title }}"/>
+                        </div>
+                        <div class="arc-right">
+                            <h4 class="blue-text"><a href="{% url 'blog:article' pk=article.article_id %} "
+                                                     title="{{ article.title }}">{{ article.title }}</a></h4>
+                            <p>{{ article.digest }}</p>
+                            <ul>
+                                <li><a title="{{ article.create_time | date:'Y年m月j日' }} 发表 "><i
+                                        class="el-time"></i> {{ article.create_time | date:'Y年m月j日' }}</a></li>
+                                <li><a href="#" title="作者： {{ article.author.username }}"><i
+                                        class="el-user"></i>{{ article.author.username }}</a></li>
+                                <li><a href="#" title="已有 {{ article.comment_count }} 条评论"><i
+                                        class="el-comment"></i>{{ article.comment_count }}</a>
+                                </li>
+                                <li><a title="已有 {{ article.read_count }} 次浏览"><i
+                                        class="el-eye-open"></i>{{ article.read_count }}</a></li>
+{#                                <li class="mob-hidden">#}
+{#                                    <i class="el-tag"></i>#}
+{#                                    <a href="#"> </a>&nbsp;#}
+{#                                </li>#}
+                                <li><a href="#{# 进入分类 #}" title="查看分类"><i
+                                        class="el-th-list"></i>{{ article.category.name }}</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+            <!--列表结束-->
+        </div>
+        <!--分页-->
+
+        <div class="pagination">
+            <div class="list-page">
+                    <ul class="post-data">
+{#                    <li><a>第 {{ current_page }} - {{ current_page| add:1 }} 页</a> <a>共 {{ total_page }} 页</a></li>#}
+                    <li><a>第 {{ current_page }}  页</a> <a>共 {{ total_page }} 页</a></li>
+                </ul>
+            </div>
+
+            <ul>
+            {# 第一页, 非第一页, 最后页, 只有一页 #}
+                {% if total_page == 1 %}
+                    {# 只有一页 #}
+                {% elif total_count == 1 %}
+                    {#  第一页 #}
+                    <li class="active"><a href="{% url 'blog:articles' %}?page_num={{ total_count | add:1 }}{% if category %}&category_id={{ category.category_id }}{% elif tag%}&tag_id={{ tag.tag_id }}{% endif %}">下一页</a></li>
+                    <li class="active"><a href="{% url 'blog:articles' %}?page_num={{ total_page }}{% if category %}&category_id={{ category.category_id }}{% elif tag%}&tag_id={{ tag.tag_id }}{% endif %}">尾页</a></li>
+                {% elif total_count|safe == total_page|safe %}
+                    {# 最后页 #}
+                    <li class="active"><a href="{% url 'blog:articles' %}?page_num={{ total_count }}{% if category %}&category_id={{ category.category_id }}{% elif tag%}&tag_id={{ tag.tag_id }}{% endif %}">首页</a></li>
+                    <li class="active"><a href="{% url 'blog:articles' %}?page_num={{ total_count | add:-1 }}{% if category %}&category_id={{ category.category_id }}{% elif tag%}&tag_id={{ tag.tag_id }}{% endif %}">上一页</a></li>
+                {% else %}
+                    <li class="active"><a href="{% url 'blog:articles' %}?page_num={{ total_count }}{% if category %}&category_id={{ category.category_id }}{% elif tag%}&tag_id={{ tag.tag_id }}{% endif %}">首页</a></li>
+                    <li class="active"><a href="{% url 'blog:articles' %}?page_num={{ total_count | add:-1 }}{% if category %}&category_id={{ category.category_id }}{% elif tag%}&tag_id={{ tag.tag_id }}{% endif %}">上一页</a></li>
+                    <li class="active"><a href="{% url 'blog:articles' %}?page_num={{ total_count | add:1 }}{% if category %}&category_id={{ category.category_id }}{% elif tag%}&tag_id={{ tag.tag_id }}{% endif %}">下一页</a></li>
+                    <li class="active"><a href="{% url 'blog:articles' %}?page_num={{ total_page }}{% if category %}&category_id={{ category.category_id }}{% elif tag%}&tag_id={{ tag.tag_id }}{% endif %}">尾页</a></li>
+                {% endif %}
+
+            </ul>
+        </div>
+
+    </section>
+    {% else %}
+    <section class="mysection" style="animation: fuxiasuo 0.8s;">暂时没有任何文章。</section>
+    {% endif %}
+
+{% endblock %}

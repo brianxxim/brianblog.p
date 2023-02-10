@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <title>Brian Admin | 登录注册</title>
+
+    <link rel="stylesheet" href="/static/auth/css/normalize.min.css">
+    <link rel="stylesheet" href="/static/auth/css/style.css">
+
+</head>
+
+<body>
+<div id="formContainer" class="dwo">
+    <div class="formLeft">
+        <img src="/static/auth/image/brian2.jpeg">
+    </div>
+    <div class="formRight">
+        <!-- Forgot password form -->
+        <form id="forgot" class="otherForm">
+            <header>
+                <h1>找回密码</h1>
+                <p id="repasswd_message">通过邮箱重置密码</p>
+            </header>
+            <section>
+                {% csrf_token %}
+                <label>
+                    <p id="input_title">邮箱</p>
+                        {% csrf_token %}
+                        <input name="email" type="email" placeholder=" ">
+                    <div class="border"></div>
+                </label>
+                <button type="button" onclick="send_email_code()">发送邮箱</button>
+            </section>
+            <footer>
+                <button type="button" class="forgotBtn">返回</button>
+            </footer>
+        </form>
+
+        <!-- Login form -->
+        <form id="login">
+            <header>
+                <h1>欢迎回来</h1>
+                {% if message %} <h5 style="background-size: 30px; background:red;"> {{ message }} </h5>{% endif %}
+            </header>
+            <section>
+                {% csrf_token %}
+                <label>
+                    <p>用户名 or 邮箱</p>
+                    <input type="text" name="username" placeholder=" ">
+                    <div class="border"></div>
+                </label>
+                <label>
+                    <p>密码</p>
+                    <input type="password" name="password" placeholder=" ">
+                    <div class="border"></div>
+                </label>
+                <button type="button" onclick="login()">登 录</button>
+            </section>
+            <footer>
+                <button type="button" class="forgotBtn">邮箱登陆</button>
+                <button type="button" class="registerBtn">注册账号</button>
+            </footer>
+        </form>
+
+        <!-- Register form -->
+        <form id="register" class="otherForm">
+            <header>
+                <h1>用户注册</h1>
+                <p>注册后享受更多服务</p>
+            </header>
+            <section>
+                {% csrf_token %}
+                <label>
+                    <p>用户名</p>
+                    <input type="text" name="username" placeholder=" ">
+                    <div class="border"></div>
+                </label>
+                <label>
+                    <p>邮箱</p>
+                    <input type="email" name="email" placeholder=" ">
+                    <div class="border"></div>
+                </label>
+                <label>
+                    <p>密码</p>
+                    <input type="password" name="password" placeholder=" ">
+                    <div class="border"></div>
+                </label>
+                <label>
+                    <p>重复密码</p>
+                    <input type="password" name="password2" placeholder=" ">
+                    <div class="border"></div>
+                </label>
+                <button type="button" onclick="register()">注 册</button>
+            </section>
+            <footer>
+                <button type="button" class="registerBtn">返回</button>
+            </footer>
+        </form>
+    </div>
+</div>
+<script src="/static/auth/js/jquery.min.js"></script>
+<script src="/static/auth/js/script.js"></script>
+<script>
+
+    // 登陆
+    login = () => {
+        $.ajax({
+            url: '/login/?next={{ next }}',
+            type: "POST",
+            data: $('#login').serialize(),
+            dataType: "json",
+            success: (data) => {
+                let msg = data.message;
+                let url = data.url;
+
+                if (msg) {
+                    alert(msg)
+                }
+                if (url) {
+                    window.location.href = data.url;
+                }
+
+            },
+            error: (err) => {
+                alert(err.responseJSON.message);
+            },
+        });
+    }
+
+    // 注册
+    register = () => {
+        $.ajax({
+            url: '/register/',
+            type: "POST",
+            data: $('#register').serialize(),
+            dataType: "json",
+            success: (data) => {
+                let msg = data.message;
+                let url = data.url;
+
+                if (msg) {
+                    alert(msg)
+                }
+                if (url) {
+                    window.location.href = data.url;
+                }
+
+            },
+            error: (err) => {
+                alert(err.responseJSON.message);
+            },
+        });
+    }
+
+    // 找回密码
+    send_email_code = () => {
+        {#const csrftoken = getCsrf();#}
+        $.ajax({
+            url: 'repasswd/',
+            {#headers: {'X-CSRFToken': csrftoken},#}
+            type: "POST",
+            data: $('#forgot').serialize(),
+            dataType: "json",
+            success: (data) => {
+                let msg_tag = $("#repasswd_message");
+                msg_tag.attr("style", "display: block;color: red; size: 30px;");
+                msg_tag.html(data.message);
+
+                $("#send_code").attr("style", "display: none;");
+                $("#send_login").attr("style", "display:block");
+
+            },
+            error: (err) => {
+                let msg = err.responseJSON.message
+
+                let tag = $("#repasswd_message");
+                tag.attr("style", "display: block; color: red; size: 30px;");
+                if (msg) {
+                    tag.html(msg);
+                }
+                else {
+                    tag.html("请求失败!");
+                }
+                console.log(err);
+            },
+        });
+    }
+
+    // 获取csrf
+    function getCsrf() {
+        const key = "csrftoken";
+        let cookieValue = null;
+
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, key.length + 1) === ( key + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(key.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    {% if show_msg %}
+        alert("{{ show_msg }}");
+    {% endif %}
+</script>
+</body>
+
+</html>

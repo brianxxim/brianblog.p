@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="contentDiv" onmouseover="getTop().stopPropagation(event);"
+     onclick="getTop().preSwapLink(event, 'html', 'ZC0027_6rnNQS2MdXcuB2MAkcc9Mca');"
+     style="position:relative;font-size:14px;height:auto;padding:15px 15px 10px 15px;z-index:1;zoom:1;line-height:1.7;"
+     class="body">
+    <div id="qm_con_body">
+        <div id="mailContentContainer" class="qmbox qm_con_body_content qqmail_webmail_only" style="opacity: 1;">
+            <div style="background-image: linear-gradient(90deg, #0066CC, #004C99); color: white; padding: 25px 50px;">
+                <h1 style="margin: 0;">{{ web_name }}</h1>
+                <h3 style="color: rgba(255,255,255,.7); margin: 0;">Huang Cheng's Blog</h3></div>
+            <div style="padding: 10px 50px;"><p>此邮件由系统自动发送，<strong>不要回复</strong>此邮件。<br>如果您没有在注册账号或重置密码，请忽略此邮件。</p>
+                <div style="background-color: rgba(0,102,204,.1); border-radius: 5px; padding: 20px 30px;"><strong>点击这个链接来设置密码：</strong><br><a
+                        href="{{ url }}"
+                        style="border-bottom: 2px solid #0066CC; color: #0066CC; text-decoration: none;" rel="noopener"
+                        target="_blank">{{ url }}</a>
+                </div>
+                <p>不要把链接给任何人。<br>此请求是由 IP 地址 {{ ip }} 发起的。</p>
+                <p style="color: rgba(0,0,0,.7); font-size: smaller;">{{ web_name }}博客<br>{{ now_date | date:"Y年m月j日" }}</p></div>
+            <div style="background-color: rgba(0,0,0,.05); color: rgba(0,0,0,.5); font-size: small; padding: 25px 50px;">
+                © 2022 <a href="https://{{ domain_name }}"
+                          style="border-bottom: 1px solid rgba(0,0,0,.5); color: rgba(0,0,0,.5); text-decoration: none;"
+                          rel="noopener" target="_blank">{{ web_name }}</a> | <a href="https://{{ domain_name }}/"
+                                                                               style="border-bottom: 1px solid rgba(0,0,0,.5); color: rgba(0,0,0,.5); text-decoration: none;"
+                                                                               rel="noopener" target="_blank">服务条款</a> |
+                <a href="https://{{ domain_name }}"
+                   style="border-bottom: 1px solid rgba(0,0,0,.5); color: rgba(0,0,0,.5); text-decoration: none;"
+                   rel="noopener" target="_blank">隐私政策</a></div>
+            <style type="text/css">.qmbox style, .qmbox script, .qmbox head, .qmbox link, .qmbox meta {
+                display: none !important;
+            }</style>
+        </div>
+    </div><!-- -->
+    <style>#mailContentContainer .txt {
+        height: auto;
+    }</style>
+</div>
+</body>
+</html>

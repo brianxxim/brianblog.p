@@ -1,0 +1,39 @@
+from django.conf import settings
+
+# 推荐文章显示数量
+RECOMMEND_ARTICLE_SHOW_COUNT = 4
+
+# 热门文章显示条数
+HOT_ARTICLE_SHOW_COUNT = 4
+
+# 轮播图数量
+SLIDESHOW_SHOW_COUNT = 4
+
+# 归档显示条数
+ARCHIVE_SHOW_COUNT = 20
+
+# 搜索结果显示的最大页数
+SEARCH_MAX_PAGE = 5
+
+# 可登陆后台用户组
+ORDINARY_USER_GROUP_NAME = '普通用户'
+
+# 管理层组名
+MANAGE_USER_GROUP_NAME = '管理层'
+
+# 需要初始化的用户组
+INIT_USER_GROUPS = [ORDINARY_USER_GROUP_NAME, MANAGE_USER_GROUP_NAME]
+
+# 页面缓存时长
+CACHE_PAGE_TIME = 60 * 1
+CACHE_SEARCH_PAGE_TIME = 10
+CACHE_DETAIL_PAGE_TIME = 60 * 10
+if settings.DEBUG:
+    CACHE_PAGE_TIME = 10
+    CACHE_SEARCH_PAGE_TIME = 10
+    CACHE_DETAIL_PAGE_TIME = 10
+
+# 注册次数过多后的等待时长s
+REGISTER_EXCEED_WAIT_TIME = 60 * 60 * 24
+# 限制注册的次数
+REGISTER_NUMBER_LIMIT = 3

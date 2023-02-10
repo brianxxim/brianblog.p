@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>[{{ article.category.name }}]{{ article.title }}</title>
+{% endblock %}
+{# meta标签, 记录作者和文章信息 #}
+{% block meta %}
+    <meta name="keywords"
+          content="{{ article.title }}"/>
+    <meta name="description" content="{{ article.digest|safe }}"/>
+{% endblock %}
+
+{% block css %}
+    <!-- 恢复css默认样式 -->
+    <link rel="stylesheet" href="/static/css/reset.css">
+    <!-- 两种样式 -->
+    <!-- prism -->
+{#    <!--#}
+    <link rel="stylesheet" href="/static/prism/prism.css">
+    <script src="/static/prism/prism.js" charset="utf-8"></script>
+{#    -->#}
+    <!-- ckeditor codesnippet -->
+    <!--
+    <link rel="stylesheet" href="/static/ckeditor/ckeditor/plugins/codesnippet/lib/highlight/styles/default.css">
+    <script src="/static/ckeditor/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    -->
+{% endblock %}
+
+{% block content %}
+
+    <div class="mysection">
+        <article>
+            <h3 class="arc-title index-title">{{ article.title }} </h3>
+            <div class="post-line bg-color">
+                <ul>
+                    <li><a title="{{ article.author.username }}发表于{{ article.create_time }}"><i class="el-time"></i>
+                        <time>{{ article.create_time }}</time>
+                    </a></li>
+                    <li><a href="#"><i class="el-user"></i>{{ article.author.username }}</a></li>
+                    <li><a href="#Coon" title="转到评论"><i class="el-comment"></i>{{ article.comment_count }}条</a></li>
+                    <li><a title="已有 {{ article.read_count }} 次浏览"><i
+                            class="el-eye-open"></i>{{ article.read_count }}</a></li>
+                </ul>
+            </div>
+
+            <!--文章正文-->
+            <div class="article-content bg-color">
+                {{ article.content| safe }}
+            </div>
+            <!--分享-->
+            <div class="article-fx"><a class="fx-btn img-circle" href="javascript:;">分享</a>
+                <div class="bd-fx arc-bdfx">
+                    <i class="el-remove fx-close"></i>
+                    <ul class="bdsharebuttonbox">
+                        <li><a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a></li>
+                        <li><a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a></li>
+                        <li><a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a></li>
+                        <li><a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a></li>
+                    </ul>
+                    <script>window._bd_share_config = {
+                        "common": {
+                            "bdSnsKey": {},
+                            "bdText": "",
+                            "bdMini": "2",
+                            "bdMiniList": false,
+                            "bdPic": "",
+                            "bdStyle": "1",
+                            "bdSize": "32"
+                        }, "share": {}
+                    };
+                    with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'https://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>
+                </div>
+            </div>
+
+            <div class="cyReward " style="text-align: center">
+                <div id="cyReward" role="cylabs" data-use="reward" sid="{{ source_id }}"></div>
+            </div>
+            <hr>
+
+
+            <!--标签-->
+            <div class="article_tag">
+                <ul>
+                    <li><a href="{% url "blog:articles" %}?category_id={{ article.category_id }}"
+                           title="归类：{{ article.category.name }}">{{ article.category.name }}</a></li>
+                    {% for tag in article.tags %}
+                        <li><a href="{% url "blog:articles" %}?tag_id={{ tag.tag_id }}"
+                               title="标签：{{ tag.name }} ">{{ tag.name }}</a>&nbsp;
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="cyEmoji" style="text-align: center">
+                {# 评论 #}
+                <!--PC和WAP自适应版-->
+                <div id="SOHUCS" sid="{{ article.article_id }}"></div>
+                <script type="text/javascript">
+                    (function () {
+                        var appid = JY_APPID;
+                        var conf = JY_CONF;
+                        var width = window.innerWidth || document.documentElement.clientWidth;
+                        if (width < 1000) {
+                            var head = document.getElementsByTagName('head')[0] || document.head || document.documentElement;
+                            var script = document.createElement('script');
+                            script.type = 'text/javascript';
+                            script.charset = 'utf-8';
+                            script.id = 'changyan_mobile_js';
+                            script.src = 'https://cy-cdn.kuaizhan.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf;
+                            head.appendChild(script);
+                        } else {
+                            var loadJs = function (d, a) {
+                                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                                var b = document.createElement("script");
+                                b.setAttribute("type", "text/javascript");
+                                b.setAttribute("charset", "UTF-8");
+                                b.setAttribute("src", d);
+                                if (typeof a === "function") {
+                                    if (window.attachEvent) {
+                                        b.onreadystatechange = function () {
+                                            var e = b.readyState;
+                                            if (e === "loaded" || e === "complete") {
+                                                b.onreadystatechange = null;
+                                                a()
+                                            }
+                                        }
+                                    } else {
+                                        b.onload = a
+                                    }
+                                }
+                                c.appendChild(b)
+                            };
+                            loadJs("https://cy-cdn.kuaizhan.com/upload/changyan.js", function () {
+                                window.changyan.api.config({appid: appid, conf: conf})
+                            });
+                        }
+                    })(); </script>
+
+            </div>
+            <!-- 打赏 -->
+            <div id="cyReward" role="cylabs" data-use="reward"></div>
+            <script type="text/javascript" charset="utf-8"
+                    src="https://cy-cdn.kuaizhan.com/js/??lib/jquery.js,changyan.labs.https.js?appid=cywaAMztL"></script>
+
+        </article>
+
+    </div>
+{% endblock %}

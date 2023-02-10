@@ -1,0 +1,6 @@
+
+# 新闻条数
+GET_NEWS_COUNT = 3
+
+# 文章排行显示数目
+RANK_ARTICLE_SHOW_COUNT = 4

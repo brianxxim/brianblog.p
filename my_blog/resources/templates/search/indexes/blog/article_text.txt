@@ -1,0 +1,7 @@
+{{ object.article_id }}
+{{ object.title }}
+{{ object.digest }}
+{{ object.content }}
+{{ object.category }}
+{{ object.author }}
+{{ object.tag }}
